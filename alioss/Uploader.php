@@ -120,7 +120,7 @@ class Uploader
         }
 
         //移动文件
-	    $this->ossClient->uploadFile(Yii::$app->params['oss']['bucket'], $this->filePath, $file['tmp_name']);
+	    $this->ossClient->uploadFile(Yii::$app->params['oss']['bucket'], ltrim($this->filePath, "/"), $file['tmp_name']);
 	    $this->stateInfo = $this->stateMap[0];
     }
 
@@ -147,21 +147,6 @@ class Uploader
             return;
         }
 
-//        //创建目录失败
-//        if (!file_exists($dirname) && !mkdir($dirname, 0777, true)) {
-//            $this->stateInfo = $this->getStateInfo("ERROR_CREATE_DIR");
-//            return;
-//        } else if (!is_writeable($dirname)) {
-//            $this->stateInfo = $this->getStateInfo("ERROR_DIR_NOT_WRITEABLE");
-//            return;
-//        }
-
-        //移动文件
-//        if (!(file_put_contents($this->filePath, $img) && file_exists($this->filePath))) { //移动失败
-//            $this->stateInfo = $this->getStateInfo("ERROR_WRITE_CONTENT");
-//        } else { //移动成功
-//            $this->stateInfo = $this->stateMap[0];
-//        }
 
 	    try {
 		    $this->ossClient->putObject(Yii::$app->params['oss']['bucket'], $this->filePath, $img);
@@ -186,18 +171,21 @@ class Uploader
             $this->stateInfo = $this->getStateInfo("ERROR_HTTP_LINK");
             return;
         }
-        //获取请求头并检测死链
-        $heads = get_headers($imgUrl);
+        //获取请求头并检测死链,返回格式化好数组
+        $heads = get_headers($imgUrl, true);
         if (!(stristr($heads[0], "200") && stristr($heads[0], "OK"))) {
             $this->stateInfo = $this->getStateInfo("ERROR_DEAD_LINK");
             return;
         }
         //格式验证(扩展名验证和Content-Type验证)
         $fileType = strtolower(strrchr($imgUrl, '.'));
-        if (!in_array($fileType, $this->config['allowFiles']) || stristr($heads['Content-Type'], "image")) {
+
+        // @TODO  图片格式出现 .jpg!w100
+        if (!in_array($fileType, $this->config['allowFiles']) && !stristr($heads['Content-Type'], "image")) {
             $this->stateInfo = $this->getStateInfo("ERROR_HTTP_CONTENTTYPE");
             return;
         }
+
 
         //打开输出缓冲区并获取远程图片
         ob_start();
@@ -225,23 +213,8 @@ class Uploader
             return;
         }
 
-        //创建目录失败
-//        if (!file_exists($dirname) && !mkdir($dirname, 0777, true)) {
-//            $this->stateInfo = $this->getStateInfo("ERROR_CREATE_DIR");
-//            return;
-//        } else if (!is_writeable($dirname)) {
-//            $this->stateInfo = $this->getStateInfo("ERROR_DIR_NOT_WRITEABLE");
-//            return;
-//        }
-//
-//        //移动文件
-//        if (!(file_put_contents($this->filePath, $img) && file_exists($this->filePath))) { //移动失败
-//            $this->stateInfo = $this->getStateInfo("ERROR_WRITE_CONTENT");
-//        } else { //移动成功
-//            $this->stateInfo = $this->stateMap[0];
-//        }
 	    try {
-		    $this->ossClient->putObject(Yii::$app->params['oss']['bucket'], $this->filePath, $img);
+		    $this->ossClient->putObject(Yii::$app->params['oss']['bucket'], ltrim($this->filePath, "/"), $img);
 		    $this->stateInfo = $this->stateMap[0];
 	    } catch (Exception $e) {
 		    $this->stateInfo = $e->getMessage();

@@ -16,7 +16,7 @@ class UeditorAliossAction extends UEditorAction
         switch (htmlspecialchars($_GET['action'])) {
             case 'uploadimage':
                 $config = array(
-                    "pathRoot" => ArrayHelper::getValue($this->config, "imageRoot", $_SERVER['DOCUMENT_ROOT']),
+                    "pathRoot" => ArrayHelper::getValue($this->config, "imageRoot", Yii::getAlias("@web")),
                     "pathFormat" => $this->config['imagePathFormat'],
                     "maxSize" => $this->config['imageMaxSize'],
                     "allowFiles" => $this->config['imageAllowFiles']
@@ -25,7 +25,7 @@ class UeditorAliossAction extends UEditorAction
                 break;
             case 'uploadscrawl':
                 $config = array(
-                    "pathRoot" => ArrayHelper::getValue($this->config, "scrawlRoot", $_SERVER['DOCUMENT_ROOT']),
+                    "pathRoot" => ArrayHelper::getValue($this->config, "scrawlRoot", Yii::getAlias("@web")),
                     "pathFormat" => $this->config['scrawlPathFormat'],
                     "maxSize" => $this->config['scrawlMaxSize'],
                     "allowFiles" => $this->config['scrawlAllowFiles'],
@@ -36,7 +36,7 @@ class UeditorAliossAction extends UEditorAction
                 break;
             case 'uploadvideo':
                 $config = array(
-                    "pathRoot" => ArrayHelper::getValue($this->config, "videoRoot", $_SERVER['DOCUMENT_ROOT']),
+                    "pathRoot" => ArrayHelper::getValue($this->config, "videoRoot", Yii::getAlias("@web")),
                     "pathFormat" => $this->config['videoPathFormat'],
                     "maxSize" => $this->config['videoMaxSize'],
                     "allowFiles" => $this->config['videoAllowFiles']
@@ -46,7 +46,7 @@ class UeditorAliossAction extends UEditorAction
             case 'uploadfile':
             default:
                 $config = array(
-                    "pathRoot" => ArrayHelper::getValue($this->config, "fileRoot", $_SERVER['DOCUMENT_ROOT']),
+                    "pathRoot" => ArrayHelper::getValue($this->config, "fileRoot", Yii::getAlias("@web")),
                     "pathFormat" => $this->config['filePathFormat'],
                     "maxSize" => $this->config['fileMaxSize'],
                     "allowFiles" => $this->config['fileAllowFiles']
@@ -85,7 +85,7 @@ class UeditorAliossAction extends UEditorAction
 			"maxSize" => $this->config['catcherMaxSize'],
 			"allowFiles" => $this->config['catcherAllowFiles'],
 			"oriName" => "remote.png",
-			"pathRoot" => $this->config['fileRoot'],
+			"pathRoot" => Yii::getAlias("@web"),
 		);
 		$fieldName = $this->config['catcherFieldName'];
 
