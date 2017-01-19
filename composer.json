@@ -1,0 +1,22 @@
+{
+    "name": "sheng/ueditor",
+    "description": "desc",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "BigKuCha"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+      "kucha/ueditor": "*",
+      "upyun/sdk": "*",
+      "qiniu/php-sdk": "*",
+      "aliyuncs/oss-sdk-php" : "~2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "ijackwu\\ueditor\\": ""
+        }
+    }
+}
